@@ -21,35 +21,52 @@ class Démineur(ctk.CTk):
         self.difficulty_menu = ctk.CTkOptionMenu(self.top_frame, width=100, values=["Facile", "Moyen", "Difficile"], command=self.option_changed)
         self.difficulty_menu.grid(column=1, row=0, padx=5)
 
+        # Default difficulty : Easy
         self.grid_size = 5  
+        self.case_size = 60
 
         self.frame = ctk.CTkFrame(root)
         self.frame.grid(row=1, column=0)
 
         self.buttons = []
         self.create_grid()
+    
+    def left_click(self, event) :
+        print("Left Click")
+    
+    def right_click(self, event) :
+        print("Right Click")
 
     def create_grid(self):
         for widget in self.frame.winfo_children():
             widget.destroy()
         
-        self.buttons = [] 
+        self.buttons = []
         
         for row in range(self.grid_size):
             row_buttons = []
             for col in range(self.grid_size):
-                btn = ctk.CTkButton(self.frame, text="", width=40, height=40)
-                btn.grid(row=row, column=col, padx=4, pady=4)
-                row_buttons.append(btn)
+                case = ctk.CTkButton(self.frame, text="", width=self.case_size, height=self.case_size, fg_color="blue")
+                case.grid(row=row, column=col, padx=4, pady=4)
+
+                case.bind("<Button-1>", command=self.left_click)
+                case.bind("<Button-3>", command=self.right_click)
+
+                row_buttons.append(case)
             self.buttons.append(row_buttons)
+        
+    
 
     def option_changed(self, choice):
         if choice == "Facile":
             self.grid_size = 5
+            self.case_size = 60
         elif choice == "Moyen":
             self.grid_size = 10
+            self.case_size = 40
         elif choice == "Difficile":
             self.grid_size = 15
+            self.case_size = 25
         
         self.create_grid() 
 
