@@ -7,21 +7,21 @@ class Démineur(ctk.CTk):
         self.root = root
         self.root.title("Démineur")
         self.root.geometry("600x650")
+
+        self.root.grid_columnconfigure(0, weight=1)
         
-        # Frame du haut (bouton + menu déroulant)
         self.top_frame = ctk.CTkFrame(root)
-        self.top_frame.grid(row=0, column=0, pady=2)
+        self.top_frame.grid(row=0, column=0, pady=5)
 
         self.top_frame.grid_columnconfigure((0, 1), weight=1)
 
-        self.new_game_btn = ctk.CTkButton(self.top_frame, text="Nouveau jeu", width=100, command=self.nouveau_jeu)
+        self.new_game_btn = ctk.CTkButton(self.top_frame, text="Nouveau jeu", width=100, command=self.new_game)
         self.new_game_btn.grid(column=0, row=0, padx=5)
         
         self.difficulty_menu = ctk.CTkOptionMenu(self.top_frame, width=100, values=["Facile", "Moyen", "Difficile"], command=self.option_changed)
         self.difficulty_menu.grid(column=1, row=0, padx=5)
 
-        self.grid_size = 15  
-
+        self.grid_size = 5  
 
         self.frame = ctk.CTkFrame(root)
         self.frame.grid(row=1, column=0)
@@ -44,7 +44,6 @@ class Démineur(ctk.CTk):
             self.buttons.append(row_buttons)
 
     def option_changed(self, choice):
-
         if choice == "Facile":
             self.grid_size = 5
         elif choice == "Moyen":
@@ -54,8 +53,7 @@ class Démineur(ctk.CTk):
         
         self.create_grid() 
 
-    def nouveau_jeu(self):
-        """Réinitialise la grille (peut être amélioré plus tard)."""
+    def new_game(self):
         self.create_grid()
 
 
