@@ -1,4 +1,5 @@
 import customtkinter as ctk
+from case import Case
 
 NUM_MIN = 15  
 
@@ -31,29 +32,29 @@ class Démineur(ctk.CTk):
         self.buttons = []
         self.create_grid()
     
-    def left_click(self, event) :
-        print("Left Click")
-    
-    def right_click(self, event) :
-        print("Right Click")
 
     def create_grid(self):
         for widget in self.frame.winfo_children():
             widget.destroy()
         
         self.buttons = []
-        
+
         for row in range(self.grid_size):
             row_buttons = []
             for col in range(self.grid_size):
-                case = ctk.CTkButton(self.frame, text="", width=self.case_size, height=self.case_size, fg_color="blue")
-                case.grid(row=row, column=col, padx=4, pady=4)
-
-                case.bind("<Button-1>", command=self.left_click)
-                case.bind("<Button-3>", command=self.right_click)
-
+                case = Case(self, row, col, False)
                 row_buttons.append(case)
             self.buttons.append(row_buttons)
+    
+    def get_is_bomb(self, row, column) :
+        # If case doesn't exist
+        if (row < 0) or (column < 0) or (row > self.grid_size-1) or (column > self.grid_size-1) :
+            return False
+
+        if self.buttons[row][column].is_bomb :
+            return True
+        else :
+            return False
         
     
 
