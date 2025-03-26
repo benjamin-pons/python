@@ -19,7 +19,7 @@ class Démineur(ctk.CTk):
         self.difficulty_menu = ctk.CTkOptionMenu(self.top_frame, width=100, values=["Facile", "Moyen", "Difficile"], command=self.option_changed)
         self.difficulty_menu.grid(column=1, row=0, padx=5)
 
-        self.grid_size = 15  
+        self.grid_size = 5
 
         self.frame = ctk.CTkFrame(root)
         self.frame.grid(row=1, column=0)
@@ -61,18 +61,16 @@ class Démineur(ctk.CTk):
     def new_game(self):
         self.create_grid()
         self.temps = 0
-        self.running = True
+        self.first_click = True
+        self.running = False
         self.chrono_label.configure(text="Temps : 0s")
-
+        
 
     def on_button_click(self, event):
-        if self.first_click:
-            self.start_chronometre()
+        if self.first_click == True:
+            self.running = True
             self.first_click = False
-
-    def start_chronometre(self):
-        self.running = True
-        self.update_chronometre()
+            self.update_chronometre()
 
     def update_chronometre(self):
         if self.running:
