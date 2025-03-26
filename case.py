@@ -39,6 +39,8 @@ class Case(ctk.CTkButton) :
             self.flagged = False
     
     def left_click(self, event) :
+        self.parent.start_timer()
+
         if self.revealed or self.marked or self.flagged :
             return
         if self.is_bomb == True:

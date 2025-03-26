@@ -30,13 +30,13 @@ class Démineur(ctk.CTk):
         self.frame.grid(row=1, column=0)
 
 
-        self.temps = 0
-        self.running = False 
+        self.timer = 0
+        self.timer_running = False 
         self.first_click = True
         self.chrono_label = ctk.CTkLabel(self.top_frame, text="Temps : 0s")
         self.chrono_label.grid(column=2, row=0, padx=5)
     
-        self.create_grid()
+        self.new_game()
     
 
     def create_grid(self):
@@ -65,8 +65,6 @@ class Démineur(ctk.CTk):
             return True
         else :
             return False
-        
-    
 
     def option_changed(self, choice):
         if choice == "Facile":
@@ -79,13 +77,13 @@ class Démineur(ctk.CTk):
             self.grid_size = 15
             self.case_size = 25
         
-        self.create_grid() 
+        self.new_game() 
 
     def new_game(self):
         self.create_grid()
-        self.temps = 0
+        self.timer = 0
         self.first_click = True
-        self.running = False
+        self.timer_running = False
         self.chrono_label.configure(text="Temps : 0s")
         
 
@@ -98,16 +96,16 @@ class Démineur(ctk.CTk):
             self.buttons[r][c].is_bomb = True
             return
 
-    def on_button_click(self, event):
+    def start_timer(self):
         if self.first_click == True:
-            self.running = True
+            self.timer_running = True
             self.first_click = False
             self.update_chronometre()
 
     def update_chronometre(self):
-        if self.running:
-            self.chrono_label.configure(text=f"Temps : {self.temps}s")
-            self.temps += 1
+        if self.timer_running:
+            self.chrono_label.configure(text=f"Temps : {self.timer}s")
+            self.timer += 1
             self.root.after(1000, self.update_chronometre)  
 
 if __name__ == "__main__":
