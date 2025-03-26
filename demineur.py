@@ -1,5 +1,6 @@
 import customtkinter as ctk
 from case import Case
+import random
 
 NUM_MIN = 15  
 
@@ -45,6 +46,9 @@ class Démineur(ctk.CTk):
                 case = Case(self, row, col, False)
                 row_buttons.append(case)
             self.buttons.append(row_buttons)
+        
+        for i in range(10) :
+            self.generate_bomb()
     
     def get_is_bomb(self, row, column) :
         # If case doesn't exist
@@ -74,6 +78,14 @@ class Démineur(ctk.CTk):
     def new_game(self):
         self.create_grid()
 
+    def generate_bomb(self) :
+        r = random.randint(0, self.grid_size-1)
+        c = random.randint(0, self.grid_size-1)
+        if self.buttons[r][c].is_bomb :
+            return self.generate_bomb()
+        else :
+            self.buttons[r][c].is_bomb = True
+            return
 
 if __name__ == "__main__":
     root = ctk.CTk()
