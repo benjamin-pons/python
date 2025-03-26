@@ -2,8 +2,6 @@ import customtkinter as ctk
 from case import Case
 import random
 
-NUM_MIN = 15  
-
 class Démineur(ctk.CTk):
     def __init__(self, root):
         self.root = root
@@ -15,11 +13,12 @@ class Démineur(ctk.CTk):
         self.top_frame = ctk.CTkFrame(root)
         self.top_frame.grid(row=0, column=0, pady=5)
 
+
         self.top_frame.grid_columnconfigure((0, 1), weight=1)
 
         self.new_game_btn = ctk.CTkButton(self.top_frame, text="Nouveau jeu", width=100, command=self.new_game)
         self.new_game_btn.grid(column=0, row=0, padx=5)
-        
+
         self.difficulty_menu = ctk.CTkOptionMenu(self.top_frame, width=100, values=["Facile", "Moyen", "Difficile"], command=self.option_changed)
         self.difficulty_menu.grid(column=1, row=0, padx=5)
 
@@ -30,7 +29,13 @@ class Démineur(ctk.CTk):
         self.frame = ctk.CTkFrame(root)
         self.frame.grid(row=1, column=0)
 
-        self.buttons = []
+
+        self.temps = 0
+        self.running = False 
+        self.first_click = True
+        self.chrono_label = ctk.CTkLabel(self.top_frame, text="Temps : 0s")
+        self.chrono_label.grid(column=2, row=0, padx=5)
+    
         self.create_grid()
     
 
@@ -45,6 +50,7 @@ class Démineur(ctk.CTk):
             for col in range(self.grid_size):
                 case = Case(self, row, col, False)
                 row_buttons.append(case)
+
             self.buttons.append(row_buttons)
         
         for i in range(10) :
@@ -77,6 +83,11 @@ class Démineur(ctk.CTk):
 
     def new_game(self):
         self.create_grid()
+        self.temps = 0
+        self.first_click = True
+        self.running = False
+        self.chrono_label.configure(text="Temps : 0s")
+        
 
     def generate_bomb(self) :
         r = random.randint(0, self.grid_size-1)
@@ -86,6 +97,18 @@ class Démineur(ctk.CTk):
         else :
             self.buttons[r][c].is_bomb = True
             return
+
+    def on_button_click(self, event):
+        if self.first_click == True:
+            self.running = True
+            self.first_click = False
+            self.update_chronometre()
+
+    def update_chronometre(self):
+        if self.running:
+            self.chrono_label.configure(text=f"Temps : {self.temps}s")
+            self.temps += 1
+            self.root.after(1000, self.update_chronometre)  
 
 if __name__ == "__main__":
     root = ctk.CTk()
