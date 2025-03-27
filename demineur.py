@@ -1,6 +1,9 @@
 import customtkinter as ctk
 from case import Case
+import time
 import random
+import tkinter as tk
+from PIL import Image, ImageTk 
 
 class Démineur(ctk.CTk):
     def __init__(self, root):
@@ -117,12 +120,79 @@ class Démineur(ctk.CTk):
             self.buttons[r][c].is_bomb = True
             return
 
+
     def update_ui(self):
         if self.timer_running:
             self.chrono_label.configure(text=f"Temps : {self.timer}s")
             self.bomb_label.configure(text=f"Bombes : {self.bomb_amount}")
             self.timer += 1
             self.root.after(1000, self.update_ui)
+
+    
+    def check_win(self):
+        for row in self.buttons:
+            for case in row:
+                if not case.is_bomb and not case.revealed:
+                    return
+        self.timer_running = False
+        time.sleep(1)
+        self.show_win_screen()
+
+
+    def lose_game(self):
+        self.timer_running = False
+        time.sleep(1)
+        self.show_lose_screen()
+    
+
+    def show_lose_screen(self):
+        self.frame.grid_forget()
+
+        self.lose_frame = ctk.CTkFrame(self.root)
+        self.lose_frame.grid(row=1, column=0, pady=20)
+
+        lose_text = f"💥 Tu as perdu ! Temps : {self.timer}s 💥"
+        lose_label = ctk.CTkLabel(self.lose_frame, text=lose_text, font=("Arial", 24))
+        lose_label.grid(column=0, row=0, padx=5, pady=20)
+
+        self.lose_image = Image.open(r"assets\lose.png")
+        self.lose_image = ImageTk.PhotoImage(self.lose_image)
+
+        image_label = tk.Label(self.lose_frame, image=self.lose_image)
+        image_label.grid(column=0, row=1, pady=10)
+
+        restart_button = ctk.CTkButton(self.lose_frame, text="Rejouer", command=self.restart)
+        restart_button.grid(column=0, row=2, pady=20)
+
+
+    def show_win_screen(self):
+        self.frame.grid_forget()
+
+        self.win_frame = ctk.CTkFrame(self.root)
+        self.win_frame.grid(row=1, column=0, pady=20)
+
+        win_text = f"💥 Tu as gagné ! Temps : {self.timer}s 💥"
+        win_label = ctk.CTkLabel(self.win_frame, text=win_text, font=("Arial", 24))
+        win_label.grid(column=0, row=0, padx=5, pady=20)
+
+        self.win_image = Image.open(r"assets\win.png")
+        self.win_image = ImageTk.PhotoImage(self.win_image)
+
+        image_label = tk.Label(self.win_frame, image=self.win_image)
+        image_label.grid(column=0, row=1, pady=10)
+
+        restart_button = ctk.CTkButton(self.win_frame, text="Rejouer", command=self.restart)
+        restart_button.grid(column=0, row=2, padx=5)
+        
+    
+    def restart(self):
+        try :
+            self.lose_frame.destroy()
+        except :
+            self.win_frame.destroy()
+        
+        self.frame.grid(row=1, column=0)
+        self.new_game()
 
 if __name__ == "__main__":
     root = ctk.CTk()
