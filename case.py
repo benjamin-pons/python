@@ -28,30 +28,37 @@ class Case(ctk.CTkButton) :
         if (self.revealed == False) and (self.marked == False) and (self.flagged == False) : # Blank case
             self.configure(text="?", fg_color="orange", hover_color="yellow")
             self.marked = True
+            return
 
         elif (self.revealed == False) and (self.marked == True) and (self.flagged == False): # Question mark case
             self.configure(text="F", fg_color="red", hover_color="red")
             self.flagged = True
+            self.parent.bomb_amount -= 1
             self.marked = False
+            return
 
         elif (self.revealed == False) and (self.marked == False) and (self.flagged == True): # Flagged case
             self.configure(text="", fg_color=self.BASE_COLOR_BLUE, hover_color=self.HOVER_COLOR_BLUE)
             self.flagged = False
+            self.parent.bomb_amount += 1
+            return
     
     def left_click(self, event) :
-        self.parent.start_timer()
+        self.parent.start_game(self.row, self.column)
 
         if self.revealed or self.marked or self.flagged :
             return
-        if self.is_bomb == True:
-            self.text = "B"
-            self.configure(text=self.text, fg_color="red", hover_color="red")
         else :
             self.reveal()
     
     def reveal(self) :
-        if self.revealed == True :
+        if self.revealed :
             return
+
+        elif self.is_bomb :
+            self.revealed = True
+            self.text = "B"
+            self.configure(text=self.text, fg_color="red", hover_color="red")
 
         self.revealed = True
         self.text = self.get_number()

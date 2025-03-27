@@ -11,20 +11,21 @@ class Démineur(ctk.CTk):
         self.root.grid_columnconfigure(0, weight=1)
         
         self.top_frame = ctk.CTkFrame(root)
-        self.top_frame.grid(row=0, column=0, pady=5)
+        self.top_frame.grid(row=0, column=0, pady=20)
 
 
         self.top_frame.grid_columnconfigure((0, 1), weight=1)
 
         self.new_game_btn = ctk.CTkButton(self.top_frame, text="Nouveau jeu", width=100, command=self.new_game)
-        self.new_game_btn.grid(column=0, row=0, padx=5)
+        self.new_game_btn.grid(column=1, row=0, padx=5)
 
         self.difficulty_menu = ctk.CTkOptionMenu(self.top_frame, width=100, values=["Facile", "Moyen", "Difficile"], command=self.option_changed)
-        self.difficulty_menu.grid(column=1, row=0, padx=5)
+        self.difficulty_menu.grid(column=2, row=0, padx=5)
 
         # Default difficulty : Easy
         self.grid_size = 5  
         self.case_size = 60
+        self.bomb_difficulty = 5
 
         self.frame = ctk.CTkFrame(root)
         self.frame.grid(row=1, column=0)
@@ -34,7 +35,11 @@ class Démineur(ctk.CTk):
         self.timer_running = False 
         self.first_click = True
         self.chrono_label = ctk.CTkLabel(self.top_frame, text="Temps : 0s")
-        self.chrono_label.grid(column=2, row=0, padx=5)
+        self.chrono_label.grid(column=0, row=0, padx=5)
+
+        self.bomb_amount = self.bomb_difficulty
+        self.bomb_label = ctk.CTkLabel(self.top_frame, text=f"Bombes : {self.bomb_amount}")
+        self.bomb_label.grid(column=3, row=0, padx=5)
     
         self.new_game()
     
@@ -53,8 +58,7 @@ class Démineur(ctk.CTk):
 
             self.buttons.append(row_buttons)
         
-        for i in range(10) :
-            self.generate_bomb()
+        
     
     def get_is_bomb(self, row, column) :
         # If case doesn't exist
@@ -70,13 +74,17 @@ class Démineur(ctk.CTk):
         if choice == "Facile":
             self.grid_size = 5
             self.case_size = 60
+            self.bomb_difficulty = 5
         elif choice == "Moyen":
             self.grid_size = 10
             self.case_size = 40
+            self.bomb_difficulty = 15
         elif choice == "Difficile":
             self.grid_size = 15
             self.case_size = 25
+            self.bomb_difficulty = 30
         
+        # Restart game after difficulty is changed
         self.new_game() 
 
     def new_game(self):
@@ -85,28 +93,36 @@ class Démineur(ctk.CTk):
         self.first_click = True
         self.timer_running = False
         self.chrono_label.configure(text="Temps : 0s")
-        
+        self.bomb_amount = self.bomb_difficulty
 
-    def generate_bomb(self) :
+    def start_game(self, row, column):
+        if self.first_click == True:
+            self.timer_running = True
+            self.first_click = False
+            self.update_ui()
+            for i in range(self.bomb_difficulty) :
+                self.generate_bomb(row, column)
+    
+    def generate_bomb(self, row, column) :
         r = random.randint(0, self.grid_size-1)
         c = random.randint(0, self.grid_size-1)
-        if self.buttons[r][c].is_bomb :
-            return self.generate_bomb()
+        
+        # If bomb is near first click
+        if (row+1 >= r >= row-1) and (column+1 >= c >= column-1) :
+            return self.generate_bomb(row, column)
+
+        elif self.buttons[r][c].is_bomb :
+            return self.generate_bomb(row, column)
         else :
             self.buttons[r][c].is_bomb = True
             return
 
-    def start_timer(self):
-        if self.first_click == True:
-            self.timer_running = True
-            self.first_click = False
-            self.update_chronometre()
-
-    def update_chronometre(self):
+    def update_ui(self):
         if self.timer_running:
             self.chrono_label.configure(text=f"Temps : {self.timer}s")
+            self.bomb_label.configure(text=f"Bombes : {self.bomb_amount}")
             self.timer += 1
-            self.root.after(1000, self.update_chronometre)  
+            self.root.after(1000, self.update_ui)
 
 if __name__ == "__main__":
     root = ctk.CTk()
