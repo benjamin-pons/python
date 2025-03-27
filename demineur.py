@@ -2,8 +2,7 @@ import customtkinter as ctk
 from case import Case
 import time
 import random
-import tkinter as tk
-from PIL import Image, ImageTk 
+from PIL import Image
 
 class Démineur(ctk.CTk):
     def __init__(self, root):
@@ -88,15 +87,16 @@ class Démineur(ctk.CTk):
             self.bomb_difficulty = 30
         
         # Restart game after difficulty is changed
-        self.new_game() 
+        self.restart() 
 
     def new_game(self):
         self.create_grid()
         self.timer = 0
+        self.bomb_amount = self.bomb_difficulty
+        self.update_ui()
         self.first_click = True
         self.timer_running = False
         self.chrono_label.configure(text="Temps : 0s")
-        self.bomb_amount = self.bomb_difficulty
 
     def start_game(self, row, column):
         if self.first_click == True:
@@ -155,10 +155,8 @@ class Démineur(ctk.CTk):
         lose_label = ctk.CTkLabel(self.lose_frame, text=lose_text, font=("Arial", 24))
         lose_label.grid(column=0, row=0, padx=5, pady=20)
 
-        self.lose_image = Image.open(r"assets\lose.png")
-        self.lose_image = ImageTk.PhotoImage(self.lose_image)
-
-        image_label = tk.Label(self.lose_frame, image=self.lose_image)
+        self.lose_image = ctk.CTkImage(light_image=Image.open("assets\lose.png"), size=(510, 361))
+        image_label = ctk.CTkLabel(self.lose_frame, image=self.lose_image, text="")
         image_label.grid(column=0, row=1, pady=10)
 
         restart_button = ctk.CTkButton(self.lose_frame, text="Rejouer", command=self.restart)
@@ -175,10 +173,8 @@ class Démineur(ctk.CTk):
         win_label = ctk.CTkLabel(self.win_frame, text=win_text, font=("Arial", 24))
         win_label.grid(column=0, row=0, padx=5, pady=20)
 
-        self.win_image = Image.open(r"assets\win.png")
-        self.win_image = ImageTk.PhotoImage(self.win_image)
-
-        image_label = tk.Label(self.win_frame, image=self.win_image)
+        self.win_image = ctk.CTkImage(light_image=Image.open("assets\win.png"), size=(510, 361))
+        image_label = ctk.CTkLabel(self.win_frame, image=self.win_image, text="")
         image_label.grid(column=0, row=1, pady=10)
 
         restart_button = ctk.CTkButton(self.win_frame, text="Rejouer", command=self.restart)
@@ -189,7 +185,12 @@ class Démineur(ctk.CTk):
         try :
             self.lose_frame.destroy()
         except :
-            self.win_frame.destroy()
+            pass
+
+        try :
+            self.win_frame.destroy()        
+        except :
+            pass
         
         self.frame.grid(row=1, column=0)
         self.new_game()
