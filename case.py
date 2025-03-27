@@ -59,6 +59,7 @@ class Case(ctk.CTkButton) :
             self.revealed = True
             self.text = "B"
             self.configure(text=self.text, fg_color="red", hover_color="red")
+            return
 
         self.revealed = True
         self.text = self.get_number()
