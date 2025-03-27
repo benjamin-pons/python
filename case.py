@@ -46,6 +46,7 @@ class Case(ctk.CTkButton) :
         if self.is_bomb == True:
             self.text = "B"
             self.configure(text=self.text, fg_color="red", hover_color="red")
+            self.parent.lose_game()
         else :
             self.reveal()
     
@@ -69,7 +70,8 @@ class Case(ctk.CTkButton) :
                             adjacent.reveal()
         else :
             self.configure(text=self.text, fg_color="green", hover_color="green")
-
+            
+        self.parent.check_win()
 
     def get_number(self) :
         c = self.column - 1
