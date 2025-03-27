@@ -3,7 +3,7 @@ from case import Case
 import time
 import random
 import tkinter as tk
-from PIL import Image, ImageTk, ImageSequence
+from PIL import Image, ImageTk 
 
 class Démineur(ctk.CTk):
     def __init__(self, root):
@@ -125,10 +125,7 @@ class Démineur(ctk.CTk):
         time.sleep(1)
         self.show_lose_screen()
     
-    def animate_gif(self):
-        self.gif_label.configure(image=self.gif_frames[self.gif_frame_index])
-        self.gif_frame_index = (self.gif_frame_index + 1) % len(self.gif_frames)
-        self.after(100, self.animate_gif) 
+
 
     def show_lose_screen(self):
         self.frame.grid_forget()
@@ -139,19 +136,17 @@ class Démineur(ctk.CTk):
 
         lose_text = f"💥 Tu as perdu ! Temps : {self.timer}s 💥"
         lose_label = ctk.CTkLabel(self.lose_frame, text=lose_text, font=("Arial", 24))
-        lose_label.pack(pady=20)
+        lose_label.grid(column=0, row=0, padx=5)
 
         replay_btn = ctk.CTkButton(self.lose_frame, text="Rejouer", command=self.restart)
-        replay_btn.pack(pady=10)
+        replay_btn.grid(column=0, row=2, pady=20)
 
-        self.gif_label = tk.Label(self.lose_frame)
-        self.gif_label.pack()
+        self.lose_image = Image.open(r"C:\Users\ponsb\OneDrive\Documents\python\lose.png")
+        self.lose_image = ImageTk.PhotoImage(self.lose_image)
 
-        self.gif = Image.open("loose.gif")  
-        self.gif_frames = [ImageTk.PhotoImage(frame.copy().convert("RGBA")) for frame in ImageSequence.Iterator(self.gif)]
-        self.gif_frame_index = 0
-        
-        self.animate_gif()
+        image_label = tk.Label(self.lose_frame, image=self.lose_image)
+        image_label.grid(column=0, row=2, pady=10)
+
 
     def show_win_screen(self):
 
@@ -163,19 +158,17 @@ class Démineur(ctk.CTk):
 
         win_text = f"💥 Tu as gagné ! Temps : {self.timer}s 💥"
         win_label = ctk.CTkLabel(self.win_frame, text=win_text, font=("Arial", 24))
-        win_label.pack(pady=20)
+        win_label.grid(column=0, row=0, padx=5)
 
         replay_btn = ctk.CTkButton(self.win_frame, text="Rejouer", command=self.restart)
-        replay_btn.pack(pady=10)
+        replay_btn.grid(column=0, row=0, padx=5)
 
-        self.gif_label = tk.Label(self.win_frame)
-        self.gif_label.pack()
+        self.win_image = Image.open(r"C:\Users\ponsb\OneDrive\Documents\python\win.png")
+        self.win_image = ImageTk.PhotoImage(self.win_image)
 
-        self.gif = Image.open("win.gif")  
-        self.gif_frames = [ImageTk.PhotoImage(frame.copy().convert("RGBA")) for frame in ImageSequence.Iterator(self.gif)]
-        self.gif_frame_index = 0
-        
-        self.animate_gif()
+        image_label = tk.Label(self.win_frame, image=self.win_image)
+        image_label.grid(column=0, row=2, pady=10)
+
 
     
     def restart(self):
