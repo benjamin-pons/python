@@ -26,21 +26,21 @@ class Case(ctk.CTkButton) :
     
     def right_click(self, event) :
         if (self.revealed == False) and (self.marked == False) and (self.flagged == False) : # Blank case
-            self.configure(text="?", fg_color="orange", hover_color="yellow")
-            self.marked = True
-            return
-
-        elif (self.revealed == False) and (self.marked == True) and (self.flagged == False): # Question mark case
             self.configure(text="F", fg_color="red", hover_color="red")
-            self.flagged = True
             self.parent.bomb_amount -= 1
-            self.marked = False
+            self.flagged = True
             return
 
         elif (self.revealed == False) and (self.marked == False) and (self.flagged == True): # Flagged case
-            self.configure(text="", fg_color=self.BASE_COLOR_BLUE, hover_color=self.HOVER_COLOR_BLUE)
-            self.flagged = False
+            self.configure(text="?", fg_color="orange", hover_color="yellow")
             self.parent.bomb_amount += 1
+            self.flagged = False
+            self.marked = True
+            return
+
+        elif (self.revealed == False) and (self.marked == True) and (self.flagged == False): # Marked case
+            self.configure(text="", fg_color=self.BASE_COLOR_BLUE, hover_color=self.HOVER_COLOR_BLUE)
+            self.marked = False
             return
     
     def left_click(self, event) :
