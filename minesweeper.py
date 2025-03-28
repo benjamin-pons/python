@@ -4,10 +4,10 @@ import time
 import random
 from PIL import Image
 
-class Démineur(ctk.CTk):
+class Minesweeper(ctk.CTk):
     def __init__(self, root):
         self.root = root
-        self.root.title("Démineur")
+        self.root.title("Minesweeper")
         self.root.geometry("600x650")
 
         self.root.grid_columnconfigure(0, weight=1)
@@ -197,5 +197,5 @@ class Démineur(ctk.CTk):
 
 if __name__ == "__main__":
     root = ctk.CTk()
-    game = Démineur(root)
+    game = Minesweeper(root)
     root.mainloop()
