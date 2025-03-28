@@ -37,6 +37,7 @@ class Case(ctk.CTkButton) :
             self.marked = False
             return
 
+
         elif (self.revealed == False) and (self.marked == False) and (self.flagged == True): # Flagged case
             self.configure(text="", fg_color=self.BASE_COLOR_BLUE, hover_color=self.HOVER_COLOR_BLUE)
             self.flagged = False
@@ -45,10 +46,10 @@ class Case(ctk.CTkButton) :
     
     def left_click(self, event) :
         self.parent.start_game(self.row, self.column)
-
         if self.revealed or self.marked or self.flagged :
             return
         else :
+            self.parent.sound_click()
             self.reveal()
     
     def reveal(self) :

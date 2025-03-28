@@ -1,8 +1,11 @@
 import customtkinter as ctk
 from case import Case
 import time
+import pygame
 import random
 from PIL import Image
+
+pygame.mixer.init()
 
 class Démineur(ctk.CTk):
     def __init__(self, root):
@@ -14,7 +17,6 @@ class Démineur(ctk.CTk):
         
         self.top_frame = ctk.CTkFrame(root)
         self.top_frame.grid(row=0, column=0, pady=20)
-
 
         self.top_frame.grid_columnconfigure((0, 1), weight=1)
 
@@ -128,7 +130,10 @@ class Démineur(ctk.CTk):
             self.timer += 1
             self.root.after(1000, self.update_ui)
 
-    
+    def sound_click(self):
+        click_sound = pygame.mixer.Sound("assets/sound_click.mp3")  
+        click_sound.play()
+        
     def check_win(self):
         for row in self.buttons:
             for case in row:
@@ -141,6 +146,8 @@ class Démineur(ctk.CTk):
 
     def lose_game(self):
         self.timer_running = False
+        explosion_sound = pygame.mixer.Sound("assets/sound_bomb.mp3")  
+        explosion_sound.play()
         time.sleep(1)
         self.show_lose_screen()
     
@@ -179,7 +186,7 @@ class Démineur(ctk.CTk):
 
         restart_button = ctk.CTkButton(self.win_frame, text="Rejouer", command=self.restart)
         restart_button.grid(column=0, row=2, padx=5)
-        
+    
     
     def restart(self):
         try :
