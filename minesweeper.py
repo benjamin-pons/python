@@ -27,7 +27,7 @@ class Minesweeper(ctk.CTk):
         # Default difficulty : Easy
         self.grid_size = 5  
         self.case_size = 60
-        self.bomb_difficulty = 5
+        self.bomb_difficulty = random.randint(3,7)
 
         self.frame = ctk.CTkFrame(root)
         self.frame.grid(row=1, column=0)
@@ -76,15 +76,15 @@ class Minesweeper(ctk.CTk):
         if choice == "Facile":
             self.grid_size = 5
             self.case_size = 60
-            self.bomb_difficulty = 5
+            self.bomb_difficulty = random.randint(3,7)
         elif choice == "Moyen":
             self.grid_size = 10
             self.case_size = 40
-            self.bomb_difficulty = 15
+            self.bomb_difficulty = random.randint(13,17)
         elif choice == "Difficile":
             self.grid_size = 15
             self.case_size = 25
-            self.bomb_difficulty = 30
+            self.bomb_difficulty = random.randint(25,35)
         
         # Restart game after difficulty is changed
         self.restart() 
